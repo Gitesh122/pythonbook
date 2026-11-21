@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python, Step by Step: Advanced Edition</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:wght@400;600&display=swap">
+<style>
+:root{--bg:#F5F8FC;--panel:#EAF0F8;--ink:#0D1A2D;--ink2:#45566D;--rule:#D3DCE8;--accent:#2145E6;--soft:#E1E8FD;--ok:#0B7F61;--warn:#9A5A07;--code:#0E1A30;--codefg:#E4ECF8;--lemon:#FFD43B;--d:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;--s:"Source Serif 4",Georgia,serif;--m:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0A1222;--panel:#111D35;--ink:#E7EEF9;--ink2:#9FB0C8;--rule:#22324D;--accent:#86A2FF;--soft:#14224B;--ok:#4FD1A5;--warn:#F2B45A}}
+:root[data-theme=dark]{--bg:#0A1222;--panel:#111D35;--ink:#E7EEF9;--ink2:#9FB0C8;--rule:#22324D;--accent:#86A2FF;--soft:#14224B;--ok:#4FD1A5;--warn:#F2B45A}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
+body{margin:0;background:var(--bg);color:var(--ink);font:1.05rem/1.7 var(--s)}
+a{color:var(--accent)}:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+code{font-family:var(--m);font-size:.86em;background:var(--panel);padding:.1em .35em;border-radius:4px}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--rule);display:flex;gap:.6rem;align-items:center;padding:.5rem 1rem}
+.top b{font:800 1rem var(--d);margin-right:auto;white-space:nowrap}
+.top input{font:500 .9rem var(--d);padding:.45rem .7rem;border:1px solid var(--rule);border-radius:6px;background:var(--panel);color:var(--ink);width:min(15rem,40vw)}
+.btn{font:600 .85rem var(--d);padding:.45rem .8rem;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink);cursor:pointer;text-decoration:none}
+.btn.on,.btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+#bar{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;z-index:30}
+.cover{background:linear-gradient(160deg,#1D40C4,#0F2780);color:#fff;padding:clamp(2rem,7vw,4.5rem) 1rem}
+.cin{max-width:72rem;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center}
+.cover h1{font:800 clamp(2.8rem,8vw,6rem)/.92 var(--d);letter-spacing:-.035em;margin:0}
+.cover h1 em{display:block;font-style:normal;color:var(--lemon);font-size:.55em;margin-top:.2em}
+.cover p{color:#BCC9F3;max-width:34rem}
+.stats{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;list-style:none}.stats li{border:1px solid #fff5;border-radius:99px;padding:.4rem .8rem;font:500 .82rem var(--d)}
+.term{background:#0A1430;border:1px solid #fff3;border-radius:12px;overflow:hidden;font-family:var(--m)}
+.term div{padding:.6rem .9rem;background:#ffffff10;color:#BCC9F3;font-size:.78rem}
+.term pre{margin:0;padding:1rem;color:#EAF0FF;font-size:.9rem;min-height:7.5rem;white-space:pre-wrap}
+.term pre.o{color:var(--lemon);min-height:2.5rem;border-top:1px solid #fff2;background:#0003}
+.wrap{max-width:72rem;margin:auto;display:grid;grid-template-columns:15rem minmax(0,1fr);gap:2.5rem;padding:2rem 1rem 4rem}
+nav.side{position:sticky;top:4rem;align-self:start;max-height:calc(100vh - 5rem);overflow:auto;font:500 .9rem/1.3 var(--d)}
+nav.side h4{margin:1rem 0 .3rem;font:700 .8rem var(--d);color:var(--ink2)}
+nav.side a{display:block;padding:.3rem .5rem;border-radius:5px;text-decoration:none;color:var(--ink)}
+nav.side a:hover{background:var(--panel)}nav.side a.done::after{content:" ✓";color:var(--ok)}
+main{min-width:0}main h2{font:800 clamp(1.7rem,4vw,2.5rem)/1.1 var(--d);letter-spacing:-.025em;margin:3.5rem 0 .4rem}
+.part{font:800 1.1rem var(--d);color:var(--accent);margin-top:3rem;border-top:3px solid var(--accent);padding-top:.6rem}
+.tag{color:var(--ink2);margin:0 0 1rem}
+.www{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:1rem 0}
+.w{background:var(--panel);border-top:3px solid var(--c);padding:.7rem .9rem;font-size:.93rem;line-height:1.5}.w b{display:block;font:700 .75rem var(--d);color:var(--c);margin-bottom:.3rem}
+.w:nth-child(1){--c:var(--accent)}.w:nth-child(2){--c:var(--ok)}.w:nth-child(3){--c:var(--warn)}
+.code{border:1px solid #1F3151;background:var(--code);border-radius:8px;overflow:hidden;margin:1rem 0}
+.cb{display:flex;justify-content:space-between;align-items:center;background:#16253F;padding:.3rem .5rem .3rem .9rem;color:#7F90AB;font:500 .74rem var(--m)}
+.cb button{font:600 .7rem var(--d);color:var(--codefg);background:none;border:1px solid #1F3151;border-radius:5px;padding:.3rem .6rem;cursor:pointer}
+.code pre{margin:0;padding:.9rem 1rem;overflow-x:auto;color:var(--codefg);font:400 .85rem/1.65 var(--m)}
+.code pre.out{background:#0A1426;border-top:1px dashed #1F3151;color:#CFE0F5}
+.k{color:#82B4FF}.s{color:#A9E6A4}.c{color:#7F90AB;font-style:italic}
+.done-btn{margin-top:.5rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}
+.q{border:1px solid var(--rule);border-radius:8px;margin:.6rem 0;background:var(--bg)}
+.q summary{cursor:pointer;padding:.8rem 1rem;font:600 1rem/1.4 var(--d);list-style:none}
+.q summary::before{content:"Q. ";color:var(--accent)}
+.q[open]{border-color:var(--accent)}.q .a{padding:0 1rem 1rem}.q .a p{margin:.3rem 0 .6rem}
+.lvl{font:600 .72rem var(--d);color:var(--ink2);float:right;margin-left:1rem}
+.score{font:600 .95rem var(--d);color:var(--ink2)}
+.contact{background:var(--panel);border-radius:10px;padding:1.2rem;margin-top:3rem}
+.contact input,.contact textarea{width:100%;font:400 1rem var(--s);padding:.6rem;margin:.3rem 0 .7rem;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink)}
+footer{border-top:1px solid var(--rule);color:var(--ink2);padding:1.5rem 1rem;text-align:center;font-size:.92rem}
+@media(max-width:52rem){.cin,.wrap{grid-template-columns:1fr}nav.side{display:none}.www{grid-template-columns:1fr}}
+@media print{.top,#bar,.cb button,nav.side{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<header class="top">
+  <b>Python, Step by Step · Advanced</b>
+  <input id="search" type="search" placeholder="Search topics" aria-label="Search topics">
+  <button class="btn" id="theme" type="button">Theme</button>
+  <a class="btn" id="mailTop" href="#">Email author</a>
+</header>
+
+<section class="cover">
+  <div class="cin">
+    <div>
+      <h1>Python,<em>advanced edition.</em></h1>
+      <p>Foundations refreshed, then iterators, concurrency, async, databases, data tools and 40 interview questions with answers. Every topic is explained as what it is, why it exists and when to use it.</p>
+      <ul class="stats" id="stats"></ul>
+      <p>Written by <strong>Gitesh Kund</strong></p>
+    </div>
+    <div class="term" aria-label="Animated Python example">
+      <div>demo.py</div><pre id="tc">print("Hello, World!")</pre><pre class="o" id="to">Hello, World!</pre>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <nav class="side" id="side" aria-label="Contents"></nav>
+  <main id="main"></main>
+</div>
+
+<footer>
+  <p><strong>Python, Step by Step: Advanced Edition</strong> by Gitesh Kund. Questions or feedback: <a id="mailFoot" href="#"></a></p>
+</footer>
+
+<script>
+/* ===== Set your email here ===== */
+const EMAIL = "your-email@example.com";
+
+const R = String.raw;
+const FOUND = [
+ {id:"f1",t:"Variables, types and operators",tag:"Store data, know its kind, calculate with it.",
+  what:"A variable is a name pointing to a value. Python picks the type (int, float, str, bool, None) from the value.",why:"Names make code readable and values reusable.",when:"Always. Use snake_case names and f-strings for output.",
+  code:R`age = 30
+price = 249.5
+name = "Asha"
+print(f"{name} is {age}, pays {price:.1f}")
+print(type(age), 7 // 2, 7 % 2, 2 ** 5)`,out:`Asha is 30, pays 249.5
+<class 'int'> 3 1 32`},
+ {id:"f2",t:"Strings and collections",tag:"Text, lists, tuples, dicts and sets.",
+  what:"Strings are immutable text. Lists are changeable sequences, tuples fixed ones, dicts map keys to values, sets keep unique items.",why:"Choosing the right container makes code shorter and faster.",when:"List for order, dict for lookup by name, set for uniqueness and fast membership.",
+  code:R`s = "python"
+print(s[::-1], s.title(), s.find("th"))
+nums = [3, 1, 3, 2]
+print(sorted(nums), set(nums))
+d = {"a": 1}
+print(d.get("b", 0))`,out:`nohtyp Python 2
+[1, 2, 3, 3] {1, 2, 3}
+0`},
+ {id:"f3",t:"Control flow and loops",tag:"Decisions and repetition.",
+  what:"if/elif/else choose a path. for walks a collection, while repeats on a condition. match handles many patterns.",why:"Programs must react to data and repeat work.",when:"for when you know the collection, while when you wait for an event.",
+  code:R`for n in range(1, 6):
+    if n % 2 == 0:
+        continue
+    print(n, end=" ")
+print()
+print([n * n for n in range(5)])`,out:`1 3 5 
+[0, 1, 4, 9, 16]`},
+ {id:"f4",t:"Functions and scope",tag:"Name a task once, reuse it.",
+  what:"def creates a function. Parameters take inputs, return sends a result. *args and **kwargs collect extras.",why:"Avoids copy-paste and lets you test small pieces.",when:"Whenever logic repeats or deserves a name. Never use mutable default arguments.",
+  code:R`def total(*nums, tax=0.0):
+    return sum(nums) * (1 + tax)
+
+print(total(10, 20, 30))
+print(total(100, tax=0.18))`,out:`60.0
+118.0`},
+ {id:"f5",t:"Classes and OOP",tag:"Model things with data and behaviour.",
+  what:"A class is a blueprint; objects are instances. Inheritance reuses a parent; polymorphism lets different classes answer the same method.",why:"Keeps data and the code that changes it together.",when:"For things with state. Prefer composition ('has a') over deep inheritance.",
+  code:R`class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        return "..."
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name}: Woof"
+
+print(Dog("Rex").speak())`,out:`Rex: Woof`},
+ {id:"f6",t:"Exceptions and files",tag:"Fail gracefully, save data.",
+  what:"try/except handles runtime errors. with open(...) reads and writes files and always closes them.",why:"Crashes lose work; files keep data after the program ends.",when:"Anything involving input, files, or networks.",
+  code:R`from pathlib import Path
+p = Path("note.txt")
+p.write_text("hello\n")
+try:
+    print(p.read_text().strip())
+    int("x")
+except ValueError as e:
+    print("bad:", e)`,out:`hello
+bad: invalid literal for int() with base 10: 'x'`}
+];
+
+const ADV = [
+ {id:"a1",t:"Iterators and the iteration protocol",tag:"What a for loop really does.",
+  what:"An iterator has __iter__ and __next__. A for loop calls iter() once, then next() until StopIteration.",why:"It lets any object work in for loops, comprehensions and unpacking.",when:"Custom sequences, lazy data, streaming rows from a file or database.",
+  code:R`class Countdown:
+    def __init__(self, start):
+        self.n = start
+    def __iter__(self):
+        return self
+    def __next__(self):
+        if self.n <= 0:
+            raise StopIteration
+        self.n -= 1
+        return self.n + 1
+
+print(list(Countdown(3)))`,out:`[3, 2, 1]`},
+ {id:"a2",t:"Generators and itertools",tag:"Lazy pipelines with almost no memory.",
+  what:"A function with yield becomes a generator that produces values one at a time. itertools provides fast building blocks for iterators.",why:"A million items never sit in memory at once.",when:"Large files, infinite streams, chained transformations.",
+  code:R`from itertools import count, islice, chain, groupby
+
+def evens():
+    for n in count(0, 2):
+        yield n
+
+print(list(islice(evens(), 4)))
+print(list(chain("ab", [1, 2])))
+for k, g in groupby("aaabbc"):
+    print(k, len(list(g)))`,out:`[0, 2, 4, 6]
+['a', 'b', 1, 2]
+a 3
+b 2
+c 1`},
+ {id:"a3",t:"Context managers",tag:"Guaranteed set-up and clean-up.",
+  what:"A context manager runs code on entering and leaving a with block, even when an error occurs. Build one with a class or @contextmanager.",why:"Files, locks, database connections and timers must always be released.",when:"Any resource you open and must close.",
+  code:R`from contextlib import contextmanager
+
+@contextmanager
+def tag(name):
+    print(f"<{name}>")
+    try:
+        yield
+    finally:
+        print(f"</{name}>")
+
+with tag("p"):
+    print("hi")`,out:`<p>
+hi
+</p>`},
+ {id:"a4",t:"Decorators, closures and functools",tag:"Wrap behaviour, cache results.",
+  what:"A closure remembers outer variables. A decorator is a function that wraps another. functools.wraps keeps the original name; lru_cache memoises results.",why:"Add logging, retries, timing or caching without touching the original function.",when:"Cross-cutting needs used by many functions.",
+  code:R`import functools
+
+def repeat(n):
+    def deco(fn):
+        @functools.wraps(fn)
+        def wrapper(*a, **k):
+            return [fn(*a, **k) for _ in range(n)]
+        return wrapper
+    return deco
+
+@repeat(3)
+def hi():
+    return "hi"
+
+@functools.lru_cache(maxsize=None)
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+
+print(hi(), fib(50))`,out:`['hi', 'hi', 'hi'] 12586269025`},
+ {id:"a5",t:"Type hints, dataclasses and Protocol",tag:"Self-documenting, tool-checked code.",
+  what:"Hints state expected types. @dataclass writes boilerplate methods. Protocol describes behaviour ('anything with speak()') instead of a base class.",why:"Editors and mypy catch bugs before you run the code.",when:"Shared code, teams, public functions, data records.",
+  code:R`from dataclasses import dataclass
+from typing import Protocol
+
+class Speaker(Protocol):
+    def speak(self) -> str: ...
+
+@dataclass(frozen=True)
+class Dog:
+    name: str
+    def speak(self) -> str:
+        return f"{self.name}: Woof"
+
+def talk(s: Speaker) -> None:
+    print(s.speak())
+
+talk(Dog("Rex"))`,out:`Rex: Woof`},
+ {id:"a6",t:"Concurrency: threads, processes and the GIL",tag:"Do several things at once, correctly.",
+  what:"Threads share memory but the GIL lets only one run Python bytecode at a time. Processes have separate memory and use all CPU cores.",why:"Pick the wrong tool and you gain nothing or break data.",when:"Threads for waiting on I/O (network, disk). Processes for CPU-heavy work.",
+  code:R`from concurrent.futures import ThreadPoolExecutor
+
+def square(n):
+    return n * n
+
+with ThreadPoolExecutor(max_workers=4) as pool:
+    print(list(pool.map(square, range(5))))`,out:`[0, 1, 4, 9, 16]`},
+ {id:"a7",t:"asyncio: async and await",tag:"Thousands of waiting tasks, one thread.",
+  what:"async def defines a coroutine. await pauses it while something slow happens, letting other coroutines run on the same thread.",why:"Servers and scrapers spend most time waiting; async uses that time.",when:"Many network calls at once. Not for CPU-bound work.",
+  code:R`import asyncio
+
+async def job(name, delay):
+    await asyncio.sleep(delay)
+    return f"{name} done"
+
+async def main():
+    print(await asyncio.gather(job("a", 0.2), job("b", 0.1)))
+
+asyncio.run(main())`,out:`['a done', 'b done']`},
+ {id:"a8",t:"Memory model, copying and __slots__",tag:"What a name really points to.",
+  what:"Names reference objects. Assignment copies the reference, not the object. CPython frees objects by reference counting plus a cycle collector. __slots__ removes the per-object dict.",why:"Explains aliasing bugs and memory use.",when:"Use deepcopy for nested data; use __slots__ for millions of small objects.",
+  code:R`import copy
+
+class A: pass
+class B:
+    __slots__ = ("x",)
+
+a = [1, 2]
+b = a
+print(a is b)
+print(a is copy.deepcopy(a))
+print(hasattr(A(), "__dict__"), hasattr(B(), "__dict__"))`,out:`True
+False
+True False`},
+ {id:"a9",t:"Databases with sqlite3",tag:"Real storage, no server needed.",
+  what:"sqlite3 ships with Python. You write SQL; always pass values with ? placeholders, never by string joining.",why:"Placeholders stop SQL injection and handle quoting for you.",when:"Apps that need queries, sorting and relationships beyond a JSON file.",
+  code:R`import sqlite3
+
+con = sqlite3.connect(":memory:")
+con.execute("CREATE TABLE book(id INTEGER PRIMARY KEY, title TEXT)")
+con.executemany("INSERT INTO book(title) VALUES (?)",
+                [("Python",), ("SQL",)])
+for row in con.execute("SELECT id, title FROM book ORDER BY id"):
+    print(row)`,out:`(1, 'Python')
+(2, 'SQL')`},
+ {id:"a10",t:"HTTP, APIs and web frameworks",tag:"Talk to the web and serve it.",
+  what:"requests calls web APIs and returns JSON. Flask and FastAPI turn functions into web endpoints.",why:"Almost every modern program exchanges data over HTTP.",when:"Always set a timeout and call raise_for_status(). Needs: python -m pip install requests",
+  code:R`import requests
+
+r = requests.get("https://api.github.com", timeout=10)
+r.raise_for_status()
+print(r.status_code, list(r.json())[:2])
+
+# FastAPI: pip install fastapi uvicorn
+# from fastapi import FastAPI
+# app = FastAPI()
+# @app.get("/hello/{name}")
+# def hello(name: str): return {"msg": f"Hi {name}"}`,out:``},
+ {id:"a11",t:"NumPy and pandas",tag:"The base of data science.",
+  what:"NumPy arrays do maths on whole arrays at once. pandas adds labelled tables (DataFrames) for cleaning and analysis.",why:"Vectorised code is far faster and shorter than Python loops.",when:"Any numeric or tabular data. Needs: python -m pip install numpy pandas",
+  code:R`import numpy as np
+import pandas as pd
+
+a = np.array([1, 2, 3, 4])
+print(a * 2, a.mean())
+
+df = pd.DataFrame({"name": ["Asha", "Ravi"], "marks": [91, 84]})
+print(df["marks"].mean(), df[df.marks > 85].name.tolist())`,out:`[2 4 6 8] 2.5
+87.5 ['Asha']`},
+ {id:"a12",t:"Logging, CLI tools and packaging",tag:"Ship real programs.",
+  what:"logging replaces print in real apps. argparse reads command-line options. A pyproject.toml describes a package so others can pip install it.",why:"Levels, timestamps and options make programs operable by other people.",when:"Any script run by someone else or on a server.",
+  code:R`import argparse, logging
+
+logging.basicConfig(level=logging.INFO,
+                    format="%(levelname)s: %(message)s")
+p = argparse.ArgumentParser()
+p.add_argument("--name", default="world")
+args = p.parse_args([])
+logging.info("hello %s", args.name)`,out:`INFO: hello world`},
+ {id:"a13",t:"Design patterns the Pythonic way",tag:"Reusable solutions to common design problems.",
+  what:"Strategy swaps behaviour (often a dict of functions). Factory builds objects by name. Singleton is usually just a module-level object.",why:"Shared vocabulary and flexible code without heavy class hierarchies.",when:"When if/elif chains grow or behaviour must change at run time.",
+  code:R`DISCOUNTS = {
+    "none": lambda p: p,
+    "ten": lambda p: p * 0.9,
+}
+def price(amount, plan="none"):
+    return DISCOUNTS[plan](amount)
+
+print(price(200), price(200, "ten"))`,out:`200 180.0`}
+];
+
+const QS = [
+ ["Basics","Easy","What is the difference between a list and a tuple?","Lists are mutable, tuples are immutable. Tuples are hashable (if their items are), slightly faster, and suit fixed records."],
+ ["Basics","Easy","Is Python compiled or interpreted?","Both: source is compiled to bytecode, then the Python Virtual Machine interprets it."],
+ ["Basics","Easy","What is the difference between == and is?","== compares values; is compares identity (same object). Use is only for None."],
+ ["Basics","Easy","What are mutable and immutable types? Give examples.","Mutable: list, dict, set. Immutable: int, float, str, tuple, frozenset, bool."],
+ ["Basics","Medium","Why is a mutable default argument dangerous?","The default is created once when the function is defined and shared by every call. Use None and create the object inside."],
+ ["Basics","Medium","Explain *args and **kwargs.","*args collects extra positional arguments into a tuple; **kwargs collects extra keyword arguments into a dict."],
+ ["Basics","Easy","What are truthy and falsy values?","Falsy: 0, 0.0, '', [], {}, (), set(), None, False. Everything else is truthy."],
+ ["Basics","Medium","How do you swap two variables?","a, b = b, a using tuple unpacking."],
+ ["OOP","Easy","What is self?","The instance on which a method is called, passed automatically as the first parameter."],
+ ["OOP","Medium","Difference between @staticmethod, @classmethod and a normal method?","Normal methods receive the instance (self); class methods receive the class (cls), good for alternative constructors; static methods receive nothing and are plain helpers."],
+ ["OOP","Medium","What is MRO?","Method Resolution Order: the order Python searches parent classes. It uses C3 linearisation; see Class.__mro__."],
+ ["OOP","Medium","What is the difference between __str__ and __repr__?","__str__ is the readable form for users (print); __repr__ is the unambiguous developer form, ideally eval-able."],
+ ["OOP","Hard","What is the diamond problem and how does Python solve it?","Ambiguity when a class inherits from two classes sharing a base. Python's MRO gives a consistent order, and super() follows it."],
+ ["OOP","Medium","What does @property do?","It lets a method be accessed like an attribute, so you can add validation or computed values without changing the public interface."],
+ ["Advanced","Medium","What is a generator and why use one?","A function using yield that produces values lazily, keeping memory usage small for large or infinite sequences."],
+ ["Advanced","Medium","What is a decorator?","A callable that takes a function and returns a wrapped function, adding behaviour without editing the original."],
+ ["Advanced","Hard","Explain the GIL.","The Global Interpreter Lock lets one thread execute Python bytecode at a time in CPython. It limits CPU-bound threading; use multiprocessing or native extensions. I/O-bound threads still help."],
+ ["Advanced","Hard","Threading vs multiprocessing vs asyncio?","Threading: I/O-bound with blocking libraries. Multiprocessing: CPU-bound, separate memory. asyncio: many concurrent I/O tasks on one thread with cooperative switching."],
+ ["Advanced","Medium","What is a context manager?","An object with __enter__ and __exit__ used with with, guaranteeing clean-up. Build with a class or @contextlib.contextmanager."],
+ ["Advanced","Medium","Shallow copy vs deep copy?","Shallow copies the container but shares inner objects; deepcopy copies everything recursively."],
+ ["Advanced","Hard","How does Python manage memory?","Private heap, reference counting for immediate freeing, plus a generational garbage collector for reference cycles."],
+ ["Advanced","Medium","What is the difference between iterable and iterator?","An iterable can produce an iterator via iter(); an iterator has __next__ and remembers its position."],
+ ["Advanced","Medium","What does lru_cache do?","Memoises function results by arguments so repeat calls are instant; arguments must be hashable."],
+ ["Advanced","Hard","What are metaclasses?","Classes whose instances are classes. type is the default metaclass. Used for frameworks that customise class creation, such as ORMs."],
+ ["Advanced","Medium","What is monkey patching?","Changing a class or module at run time. Handy in tests, risky in production."],
+ ["Coding","Easy","Write FizzBuzz for 1 to 15.","", R`for n in range(1, 16):
+    print("FizzBuzz" if n % 15 == 0 else "Fizz" if n % 3 == 0
+          else "Buzz" if n % 5 == 0 else n)`],
+ ["Coding","Easy","Check whether two strings are anagrams.","Sort the letters (or count them) and compare.", R`def is_anagram(a, b):
+    return sorted(a.lower()) == sorted(b.lower())`],
+ ["Coding","Medium","Two-sum: indices of two numbers adding to a target.","Use a dict of seen values for O(n) time.", R`def two_sum(nums, target):
+    seen = {}
+    for i, n in enumerate(nums):
+        if target - n in seen:
+            return seen[target - n], i
+        seen[n] = i`],
+ ["Coding","Medium","Flatten a nested list of any depth.","Recurse; a generator keeps it lazy.", R`def flatten(items):
+    for x in items:
+        if isinstance(x, list):
+            yield from flatten(x)
+        else:
+            yield x
+
+print(list(flatten([1, [2, [3, 4]], 5])))`],
+ ["Coding","Medium","Count word frequency in a sentence.","Counter does it in one line.", R`from collections import Counter
+print(Counter("to be or not to be".split()).most_common(2))`],
+ ["Coding","Hard","Implement an LRU cache.","OrderedDict keeps usage order; move recently used keys to the end.", R`from collections import OrderedDict
+
+class LRU:
+    def __init__(self, cap):
+        self.cap, self.d = cap, OrderedDict()
+    def get(self, k):
+        if k not in self.d:
+            return -1
+        self.d.move_to_end(k)
+        return self.d[k]
+    def put(self, k, v):
+        self.d[k] = v
+        self.d.move_to_end(k)
+        if len(self.d) > self.cap:
+            self.d.popitem(last=False)`],
+ ["Coding","Medium","Find the first non-repeating character.","Count first, then scan in order.", R`from collections import Counter
+def first_unique(s):
+    c = Counter(s)
+    return next((ch for ch in s if c[ch] == 1), None)`],
+ ["Basics","Medium","How do you remove duplicates from a list and keep the order?","dict.fromkeys(items) keeps first-seen order: list(dict.fromkeys(items))."],
+ ["Advanced","Medium","What is the difference between append and extend?","append adds one object (even a list as one item); extend adds each item of an iterable."],
+ ["Advanced","Hard","What is the difference between __new__ and __init__?","__new__ creates the instance (and can return a different one); __init__ initialises an already created instance."],
+ ["Advanced","Medium","What are f-strings and why prefer them?","Literals like f'{x:.2f}' evaluate expressions inline: readable, fast and less error-prone than % or +."],
+ ["Basics","Easy","What is PEP 8?","Python's official style guide: naming, indentation (4 spaces), line length and layout."],
+ ["Advanced","Medium","How do you handle exceptions properly?","Catch specific exceptions, keep try blocks small, use else/finally, and raise custom exceptions for domain errors. Avoid bare except."]
+];
+
+const $ = s => document.querySelector(s);
+const el = (tag, attrs, ...kids) => { const e = document.createElement(tag); Object.assign(e, attrs || {}); kids.forEach(k => e.append(k)); return e; };
+const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+let done = new Set(store.get("pyadv-done", []));
+
+/* email */
+const mail = `mailto:${EMAIL}?subject=${encodeURIComponent("Python book feedback")}`;
+["mailTop", "mailFoot"].forEach(id => { const a = $("#" + id); a.href = mail; if (id === "mailFoot") a.textContent = EMAIL; });
+
+/* stats */
+const total = FOUND.length + ADV.length;
+$("#stats").append(...[`${total} chapters`, `${QS.length} interview questions`, "Runnable examples", "Progress tracking"].map(t => el("li", { textContent: t })));
+
+function codeBlock(title, code, out) {
+  const wrap = el("figure", { className: "code" }); wrap.style.margin = "1rem 0";
+  const btn = el("button", { type: "button", textContent: "Copy" });
+  btn.onclick = async () => { try { await navigator.clipboard.writeText(code); btn.textContent = "Copied"; } catch (e) { btn.textContent = "Press Ctrl+C"; } setTimeout(() => btn.textContent = "Copy", 1500); };
+  wrap.append(el("div", { className: "cb" }, title, btn), el("pre", { textContent: code }));
+  if (out) wrap.append(el("pre", { className: "out", textContent: out }));
+  return wrap;
+}
+
+function chapter(c, n) {
+  const s = el("section", { id: c.id });
+  s.dataset.text = (c.t + " " + c.tag + " " + c.what).toLowerCase();
+  s.append(el("h2", { textContent: c.t }), el("p", { className: "tag", textContent: c.tag }));
+  const www = el("div", { className: "www" });
+  [["WHAT", c.what], ["WHY", c.why], ["WHEN", c.when]].forEach(([l, t]) => www.append(el("div", { className: "w" }, el("b", { textContent: l }), t)));
+  s.append(www, codeBlock("python", c.code, c.out));
+  const b = el("button", { className: "btn done-btn", type: "button" });
+  const paint = () => { b.textContent = done.has(c.id) ? "Completed ✓" : "Mark as complete"; b.classList.toggle("on", done.has(c.id)); };
+  b.onclick = () => { done.has(c.id) ? done.delete(c.id) : done.add(c.id); store.set("pyadv-done", [...done]); paint(); refresh(); };
+  paint(); s.append(b);
+  return s;
+}
+
+const main = $("#main"), side = $("#side");
+function build() {
+  main.append(el("div", { className: "part", textContent: "Part I · Foundations refresher" }));
+  FOUND.forEach(c => main.append(chapter(c)));
+  main.append(el("div", { className: "part", textContent: "Part II · Advanced Python" }));
+  ADV.forEach(c => main.append(chapter(c)));
+  main.append(interview(), contact());
+  const mk = (h, list) => { side.append(el("h4", { textContent: h })); list.forEach(c => side.append(el("a", { href: "#" + c.id, textContent: c.t, id: "n-" + c.id }))); };
+  mk("Foundations", FOUND); mk("Advanced", ADV);
+  side.append(el("h4", { textContent: "Career" }), el("a", { href: "#interview", textContent: "Interview questions" }), el("a", { href: "#contact", textContent: "Connect with the author" }));
+}
+
+function interview() {
+  const s = el("section", { id: "interview" });
+  s.dataset.text = "interview questions answers";
+  s.append(el("div", { className: "part", textContent: "Part III · Interview preparation" }), el("h2", { textContent: "Interview questions" }),
+    el("p", { className: "tag", textContent: "Try to answer aloud first, then open the answer. Mark the ones you got right." }));
+  const chips = el("div", { className: "chips" }), score = el("div", { className: "score" }), list = el("div");
+  let cat = "All", known = new Set(store.get("pyadv-known", []));
+  const cats = ["All", "Basics", "OOP", "Advanced", "Coding"];
+  const render = () => {
+    list.replaceChildren();
+    QS.forEach((q, i) => {
+      if (cat !== "All" && q[0] !== cat) return;
+      const d = el("details", { className: "q" });
+      const a = el("div", { className: "a" });
+      if (q[3]) a.append(el("p", { textContent: q[3] }));
+      if (q[4]) a.append(codeBlock("solution", q[4]));
+      const k = el("button", { className: "btn", type: "button" });
+      const p = () => { k.textContent = known.has(i) ? "Got it ✓" : "I got this right"; k.classList.toggle("on", known.has(i)); score.textContent = `Confident on ${known.size} of ${QS.length}`; };
+      k.onclick = () => { known.has(i) ? known.delete(i) : known.add(i); store.set("pyadv-known", [...known]); p(); };
+      p(); a.append(k);
+      d.append(el("summary", {}, el("span", { className: "lvl", textContent: q[0] + " · " + q[1] }), q[2]), a);
+      list.append(d);
+    });
+  };
+  cats.forEach(c => { const b = el("button", { className: "btn" + (c === cat ? " on" : ""), type: "button", textContent: c }); b.onclick = () => { cat = c; chips.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); render(); }; chips.append(b); });
+  const shuf = el("button", { className: "btn", type: "button", textContent: "Shuffle" });
+  shuf.onclick = () => { for (let i = QS.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [QS[i], QS[j]] = [QS[j], QS[i]]; } known = new Set(); store.set("pyadv-known", []); render(); };
+  chips.append(shuf); s.append(chips, score, list); render();
+  return s;
+}
+
+function contact() {
+  const s = el("section", { id: "contact", className: "contact" });
+  s.dataset.text = "contact email connect";
+  const name = el("input", { placeholder: "Your name", ariaLabel: "Your name" });
+  const msg = el("textarea", { rows: 4, placeholder: "Your question or feedback", ariaLabel: "Message" });
+  const send = el("button", { className: "btn on", type: "button", textContent: "Open in email app" });
+  send.onclick = () => { location.href = `mailto:${EMAIL}?subject=${encodeURIComponent("Python book: message from " + (name.value || "a reader"))}&body=${encodeURIComponent(msg.value)}`; };
+  s.append(el("h2", { textContent: "Connect with the author" }), el("p", { textContent: "Write to Gitesh Kund at " + EMAIL + ". Your email app opens with the message filled in." }), name, msg, send);
+  return s;
+}
+
+function refresh() {
+  [...FOUND, ...ADV].forEach(c => $("#n-" + c.id).classList.toggle("done", done.has(c.id)));
+  $("#stats").lastChild.textContent = `Progress ${done.size}/${total}`;
+}
+
+/* search */
+$("#search").addEventListener("input", e => {
+  const q = e.target.value.trim().toLowerCase();
+  main.querySelectorAll("section").forEach(s => { s.hidden = q && !s.dataset.text.includes(q); });
+});
+
+/* theme */
+$("#theme").onclick = () => {
+  const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  document.documentElement.dataset.theme = cur === "dark" ? "light" : "dark";
+};
+
+/* progress bar */
+const bar = $("#bar");
+addEventListener("scroll", () => { const h = document.documentElement.scrollHeight - innerHeight; bar.style.transform = `scaleX(${h > 0 ? scrollY / h : 0})`; }, { passive: true });
+
+/* cover typing demo */
+const demo = [["print(\"Hello, World!\")", "Hello, World!"], ["print([n * n for n in range(1, 6)])", "[1, 4, 9, 16, 25]"], ["print(sum(range(101)))", "5050"], ["print(\"python\"[::-1])", "nohtyp"]];
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let i = 0;
+  const next = () => { i = (i + 1) % demo.length; const [c, o] = demo[i]; let n = 0; $("#to").textContent = ""; (function t() { $("#tc").textContent = c.slice(0, ++n); n < c.length ? setTimeout(t, 40) : setTimeout(() => { $("#to").textContent = o; setTimeout(next, 2500); }, 300); })(); };
+  setTimeout(next, 3000);
+}
+
+build(); refresh();
+</script>
+</body>
+</html>
